@@ -1,0 +1,26 @@
+name: CI/CD
+
+on: 
+  push:
+    branches: ["main"]
+    
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3.3.0
+    
+    - name: Autenticação no DockerHub
+    - uses: docker/login-action@v2.1.0
+    - with:
+      username: ${{secrets.DOCKERHUB_USER}}
+      password: ${{secrets.DOCKERHUB_PASS}}
+    
+    - name: Construir Imagem Docker   
+    - uses: docker/build-push-action@v4.0.0
+        context: /.src
+          file: /.src/Dockerfile
+          push: true
+          tags: matheuscmf/kube-news:v1
+                matheuscmf/kube-news:latest
